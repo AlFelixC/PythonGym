@@ -61,6 +61,6 @@ class SmartAgent(BaseAgent):
                 return MOVE_UP, False
         
         #Prioridad 4: Exploración aleatoria (si no hay amenazas ni objetivos)
-        print("No hay amenazas ni objetivos cercanos. Explorando...")
+        print("No hay amenazas ni objetivos cercanos. Explorando mapa...")
         action = random.randint(0, 4)
         return action, False
