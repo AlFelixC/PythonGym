@@ -22,10 +22,10 @@ class LGymClient:
     def connect(self):
         self.lgconnectClinet.clientProgram()
         data = self.lgconnectClinet.clientRecive()
-        if self._cheackReciveMsg(data):
+        if self._cheackReciveMsg(data,True):
             self.lgconnectClinet.clientSend("command=hello&id="+str(self.id )+"\r\n")
             data = self.lgconnectClinet.clientRecive()
-            return self._cheackReciveMsg(data)
+            return self._cheackReciveMsg(data,True)
         return False
 
     
@@ -107,17 +107,17 @@ class LGymClient:
     def commandInit(self):
         self.lgconnectClinet.clientSend("command=init&id="+str(self.id )+"\r\n")
         data = self.lgconnectClinet.clientRecive()
-        return self._cheackReciveMsg(data)
+        return self._cheackReciveMsg(data,True)
     
     def addCustomAgent(self,id,agent):
         self.lgconnectClinet.clientSend("command=addagent&id="+str(self.id )+"&format=custom&type=mlpc&agentid="+id+"&agent="+agent+"\r\n")
         data = self.lgconnectClinet.clientRecive()
-        return self._cheackReciveMsg(data)
+        return self._cheackReciveMsg(data,True)
     
     def commandReset(self):
         self.lgconnectClinet.clientSend("command=reset&id="+str(self.id )+"\r\n")
         data = self.lgconnectClinet.clientRecive()
-        return self._cheackReciveMsg(data)
+        return self._cheackReciveMsg(data,True)
     
     def SendAction(self, idsArr, actionArr):
         if len(idsArr) != len(actionArr):
@@ -128,7 +128,7 @@ class LGymClient:
         p += idsArr[len(idsArr)-1] + "=" + actionArr[len(actionArr)-1]
         self.lgconnectClinet.clientSend("command=actions&id="+str(self.id )+"&"+p+"\r\n")
         data = self.lgconnectClinet.clientRecive()
-        return self._cheackReciveMsg(data)
+        return self._cheackReciveMsg(data,True)
     
     def RecivePerception(self):
         data = self.lgconnectClinet.clientRecive()
