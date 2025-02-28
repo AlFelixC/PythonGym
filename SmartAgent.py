@@ -22,25 +22,41 @@ class SmartAgent(BaseAgent):
             return self.state_esquivar(perception)
 
     def state_explorar(self, perception):
-        # Cambiar a estado DISPARAR si hay bloque destruible a distancia 1
-        if (perception[NEIGHBORHOOD_UP] == DESTRUCTIBLE_WALL or
-            perception[NEIGHBORHOOD_DOWN] == DESTRUCTIBLE_WALL or
-            perception[NEIGHBORHOOD_RIGHT] == DESTRUCTIBLE_WALL or
-            perception[NEIGHBORHOOD_LEFT] == DESTRUCTIBLE_WALL):
-            self.state = "DISPARAR"
-            return STAY, False
+        # Cambiar a estado DISPARAR si hay bloque destruible a distancia 1 y esta orientado
+        shoot = random.randint(0, 1)
+        
+        if shoot == 1 and perception[CAN_FIRE] == 1:
+            if (self.orientation == MOVE_UP and perception[NEIGHBORHOOD_UP] == BRICK) or \
+                (self.orientation == MOVE_DOWN and perception[NEIGHBORHOOD_DOWN] == BRICK) or \
+                (self.orientation == MOVE_RIGHT and perception[NEIGHBORHOOD_RIGHT] == BRICK) or \
+                (self.orientation == MOVE_LEFT and perception[NEIGHBORHOOD_LEFT] == BRICK):
+                    self.state = "DISPARAR"
+                    return STAY, False
 
-        # Cambiar a estado DISPARAR si hay enemigo a distancia 4
-        if perception[CAN_FIRE] == 4 and (
-            perception[NEIGHBORHOOD_UP] == PLAYER or
-            perception[NEIGHBORHOOD_DOWN] == PLAYER or
-            perception[NEIGHBORHOOD_RIGHT] == PLAYER or
-            perception[NEIGHBORHOOD_LEFT] == PLAYER):
+        # Cambiar a estado DISPARAR si hay centro de mando a distancia 4 o menos y esta orientado
+        if perception[CAN_FIRE] <= 4 and (
+            self.orientation == MOVE_UP and perception[NEIGHBORHOOD_UP] == COMMAND_CENTER) or \
+            (self.orientation == MOVE_DOWN and perception[NEIGHBORHOOD_DOWN] == BRICK) or \
+            (self.orientation == MOVE_RIGHT and perception[NEIGHBORHOOD_RIGHT] == BRICK) or \
+            (self.orientation == MOVE_LEFT and perception[NEIGHBORHOOD_LEFT] == BRICK):
+                self.state = "DISPARAR"
+                return STAY, False
+
+        # Cambiar a estado DISPARAR si hay enemigo a distancia 4 y esta orientado
+        if perception[CAN_FIRE] <= 4 and (
+                self.orientation == MOVE_UP and perception[NEIGHBORHOOD_UP] == PLAYER) or \
+                (self.orientation == MOVE_DOWN and perception[NEIGHBORHOOD_DOWN] == PLAYER) or \
+                (self.orientation == MOVE_RIGHT and perception[NEIGHBORHOOD_RIGHT] == PLAYER) or \
+                (self.orientation == MOVE_LEFT and perception[NEIGHBORHOOD_LEFT] == PLAYER):
             self.state = "DISPARAR"
             return STAY, False
 
         # Cambiar a estado ORIENTAR si hay enemigo a distancia 2 pero no orientado
-        if perception[CAN_FIRE] == 2:
+        if perception[CAN_FIRE] <= 2 and (
+            perception[NEIGHBORHOOD_UP] == PLAYER or
+            perception[NEIGHBORHOOD_DOWN] == PLAYER or
+            perception[NEIGHBORHOOD_RIGHT] == PLAYER or
+            perception[NEIGHBORHOOD_LEFT] == PLAYER):
             self.state = "ORIENTAR"
             return STAY, False
 
@@ -59,10 +75,22 @@ class SmartAgent(BaseAgent):
         return STAY, True
 
     def state_orientar(self, perception):
-        # Lógica para orientarse hacia el enemigo
-        # (Aquí deberías implementar la lógica para determinar la mejor orientación)
+        enemy_x = perception[PLAYER_X]
+        enemy_y = perception[PLAYER_Y]
+        agent_x = perception[AGENT_X]
+        agent_y = perception[AGENT_Y]
+
+        dx = enemy_x - agent_x
+        dy = enemy_y - agent_y
+
+        if abs(dx) > abs(dy):
+            self.orientation = MOVE_RIGHT if dx > 0 else MOVE_LEFT
+        else:
+            self.orientation = MOVE_DOWN if dy > 0 else MOVE_UP
+
         self.state = "DISPARAR"
         return self.orientation, False
+
 
     def state_esquivar(self, perception):
         if perception[NEIGHBORHOOD_UP] == SHELL:
