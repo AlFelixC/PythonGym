@@ -25,13 +25,17 @@ class SmartAgent(BaseAgent):
         # Cambiar a estado DISPARAR si hay bloque destruible a distancia 1 y esta orientado
         shoot = random.randint(0, 1)
         
-        if shoot == 1 and perception[CAN_FIRE] == 1:
-            if (self.orientation == MOVE_UP and perception[NEIGHBORHOOD_UP] == BRICK) or \
-                (self.orientation == MOVE_DOWN and perception[NEIGHBORHOOD_DOWN] == BRICK) or \
-                (self.orientation == MOVE_RIGHT and perception[NEIGHBORHOOD_RIGHT] == BRICK) or \
-                (self.orientation == MOVE_LEFT and perception[NEIGHBORHOOD_LEFT] == BRICK):
-                    self.state = "DISPARAR"
-                    return STAY, False
+        if shoot == 1: 
+            if perception[CAN_FIRE] == 1:
+                if (self.orientation == MOVE_UP and perception[NEIGHBORHOOD_UP] == BRICK) or \
+                    (self.orientation == MOVE_DOWN and perception[NEIGHBORHOOD_DOWN] == BRICK) or \
+                    (self.orientation == MOVE_RIGHT and perception[NEIGHBORHOOD_RIGHT] == BRICK) or \
+                    (self.orientation == MOVE_LEFT and perception[NEIGHBORHOOD_LEFT] == BRICK):
+                        self.state = "DISPARAR"
+                        return STAY, False
+        else:
+            self.state = "EXPLORAR"
+            return STAY, False
 
         # Cambiar a estado DISPARAR si hay centro de mando a distancia 4 o menos y esta orientado
         if perception[CAN_FIRE] <= 4 and (
