@@ -100,19 +100,86 @@ class SmartAgent(BaseAgent):
         self.state = "DISPARAR"
         return self.orientation, False
 
+    def acorralado(self, perception, direction): #Acorralado como RAMBO
+        if direction == MOVE_UP:
+            return (perception[NEIGHBORHOOD_LEFT] == BRICK or perception[NEIGHBORHOOD_LEFT] == UNBREAKABLE) and \
+                (perception[NEIGHBORHOOD_RIGHT] == BRICK or perception[NEIGHBORHOOD_RIGHT] == UNBREAKABLE) and \
+                (perception[NEIGHBORHOOD_DOWN] == BRICK or perception[NEIGHBORHOOD_DOWN] == UNBREAKABLE)
+        elif direction == MOVE_DOWN:
+            return (perception[NEIGHBORHOOD_LEFT] == BRICK or perception[NEIGHBORHOOD_LEFT] == UNBREAKABLE) and \
+                (perception[NEIGHBORHOOD_RIGHT] == BRICK or perception[NEIGHBORHOOD_RIGHT] == UNBREAKABLE) and \
+                (perception[NEIGHBORHOOD_UP] == BRICK or perception[NEIGHBORHOOD_UP] == UNBREAKABLE)
+        elif direction == MOVE_RIGHT:
+            return (perception[NEIGHBORHOOD_UP] == BRICK or perception[NEIGHBORHOOD_UP] == UNBREAKABLE) and \
+                (perception[NEIGHBORHOOD_DOWN] == BRICK or perception[NEIGHBORHOOD_DOWN] == UNBREAKABLE) and \
+                (perception[NEIGHBORHOOD_LEFT] == BRICK or perception[NEIGHBORHOOD_LEFT] == UNBREAKABLE)
+        elif direction == MOVE_LEFT:
+            return (perception[NEIGHBORHOOD_UP] == BRICK or perception[NEIGHBORHOOD_UP] == UNBREAKABLE) and \
+                (perception[NEIGHBORHOOD_DOWN] == BRICK or perception[NEIGHBORHOOD_DOWN] == UNBREAKABLE) and \
+                (perception[NEIGHBORHOOD_RIGHT] == BRICK or perception[NEIGHBORHOOD_RIGHT] == UNBREAKABLE)
 
+
+    #Esta funcion consiste en la disuasion de amenazas de la siguiente manera
+    #   1.- Si el misil le llega por cualquier direccion el NPC intentara huir en direccion opuesta
+    #       hasta encontrar una salida y salir del mismo EJE por el que viene el misil
+    #   
+    #   2.- Si despues de huir intentando salir del EJE este se encuentra acorralado le intentara disparar al misil
+    #       para destruirlo
     def state_esquivar(self, perception):
         if perception[NEIGHBORHOOD_UP] == SHELL:
-            return MOVE_DOWN, False
+            if self.acorralado(perception, MOVE_UP):
+                self.orientation = MOVE_UP
+                self.state = "DISPARAR"
+                return STAY, False
+            elif perception[NEIGHBORHOOD_LEFT] != BRICK and perception[NEIGHBORHOOD_LEFT] != UNBREAKABLE:
+                return MOVE_LEFT, False
+            elif perception[NEIGHBORHOOD_RIGHT] != BRICK and perception[NEIGHBORHOOD_RIGHT] != UNBREAKABLE:
+                return MOVE_RIGHT, False
+            else:
+                return STAY, False
+
         if perception[NEIGHBORHOOD_DOWN] == SHELL:
-            return MOVE_UP, False
+            if self.acorralado(perception, MOVE_DOWN):
+                self.orientation = MOVE_DOWN
+                self.state = "DISPARAR"
+                return STAY, False
+            elif perception[NEIGHBORHOOD_LEFT] != BRICK and perception[NEIGHBORHOOD_LEFT] != UNBREAKABLE:
+                return MOVE_LEFT, False
+            elif perception[NEIGHBORHOOD_RIGHT] != BRICK and perception[NEIGHBORHOOD_RIGHT] != UNBREAKABLE:
+                return MOVE_RIGHT, False
+            else:
+                return STAY, False
+
         if perception[NEIGHBORHOOD_RIGHT] == SHELL:
-            return MOVE_LEFT, False
+            if self.acorralado(perception, MOVE_RIGHT):
+                self.orientation = MOVE_RIGHT
+                self.state = "DISPARAR"
+                return STAY, False
+            elif perception[NEIGHBORHOOD_UP] != BRICK and perception[NEIGHBORHOOD_UP] != UNBREAKABLE:
+                return MOVE_UP, False
+            elif perception[NEIGHBORHOOD_DOWN] != BRICK and perception[NEIGHBORHOOD_DOWN] != UNBREAKABLE:
+                return MOVE_DOWN, False
+            else:
+                return STAY, False
+
         if perception[NEIGHBORHOOD_LEFT] == SHELL:
-            return MOVE_RIGHT, False
-        
-        self.state = "EXPLORAR"
+            if self.acorralado(perception, MOVE_LEFT):
+                self.orientation = MOVE_LEFT
+                self.state = "DISPARAR"
+                return STAY, False
+            elif perception[NEIGHBORHOOD_UP] != BRICK and perception[NEIGHBORHOOD_UP] != UNBREAKABLE:
+                return MOVE_UP, False
+            elif perception[NEIGHBORHOOD_DOWN] != BRICK and perception[NEIGHBORHOOD_DOWN] != UNBREAKABLE:
+                return MOVE_DOWN, False
+            else:
+                return STAY, False
+
+        if not self.check_missile(perception):
+            self.state = "EXPLORAR"
         return STAY, False
+
+
+
 
     def check_missile(self, perception):
         #Detectar proyectil a distancia 8 si no está orientado
