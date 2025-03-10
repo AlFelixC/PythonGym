@@ -42,8 +42,8 @@ class SmartAgent(BaseAgent):
                         return STAY, False
     
 
-        #Cambiar a estado DISPARAR si hay centro de mando a distancia 4 o menos y esta orientado
-        if perception[CAN_FIRE] <= 5 and (
+        #Cambiar a estado DISPARAR si hay centro de mando a distancia 6 o menos y esta orientado
+        if perception[CAN_FIRE] <= 6 and (
             self.orientation == MOVE_UP and perception[NEIGHBORHOOD_UP] == COMMAND_CENTER) or \
             (self.orientation == MOVE_DOWN and perception[NEIGHBORHOOD_DOWN] == COMMAND_CENTER) or \
             (self.orientation == MOVE_RIGHT and perception[NEIGHBORHOOD_RIGHT] == COMMAND_CENTER) or \
@@ -51,8 +51,8 @@ class SmartAgent(BaseAgent):
                 self.state = "DISPARAR"
                 return STAY, False
 
-        #Cambiar a estado DISPARAR si hay enemigo a distancia 6 y esta orientado
-        if perception[CAN_FIRE] <= 6 and (
+        #Cambiar a estado DISPARAR si hay enemigo a distancia 8 y esta orientado
+        if perception[CAN_FIRE] <= 8 and (
                 self.orientation == MOVE_UP and perception[NEIGHBORHOOD_UP] == PLAYER) or \
                 (self.orientation == MOVE_DOWN and perception[NEIGHBORHOOD_DOWN] == PLAYER) or \
                 (self.orientation == MOVE_RIGHT and perception[NEIGHBORHOOD_RIGHT] == PLAYER) or \
@@ -60,8 +60,8 @@ class SmartAgent(BaseAgent):
             self.state = "DISPARAR"
             return STAY, False
 
-        #Cambiar a estado ORIENTAR si hay enemigo a distancia 4 pero no orientado
-        if perception[CAN_FIRE] <= 4 and (
+        #Cambiar a estado ORIENTAR si hay enemigo a distancia 6 pero no orientado
+        if perception[CAN_FIRE] <= 6 and (
             perception[NEIGHBORHOOD_UP] == PLAYER or
             perception[NEIGHBORHOOD_DOWN] == PLAYER or
             perception[NEIGHBORHOOD_RIGHT] == PLAYER or
@@ -84,18 +84,29 @@ class SmartAgent(BaseAgent):
         return STAY, True
 
     def state_orientar(self, perception):
-        enemy_x = perception[PLAYER_X]
-        enemy_y = perception[PLAYER_Y]
-        agent_x = perception[AGENT_X]
-        agent_y = perception[AGENT_Y]
-
-        dx = enemy_x - agent_x
-        dy = enemy_y - agent_y
-
-        if abs(dx) > abs(dy):
-            self.orientation = MOVE_RIGHT if dx > 0 else MOVE_LEFT
+        #Verificar si el centro de mando está cerca
+        if perception[NEIGHBORHOOD_UP] == COMMAND_CENTER:
+            self.orientation = MOVE_UP
+        elif perception[NEIGHBORHOOD_DOWN] == COMMAND_CENTER:
+            self.orientation = MOVE_DOWN
+        elif perception[NEIGHBORHOOD_RIGHT] == COMMAND_CENTER:
+            self.orientation = MOVE_RIGHT
+        elif perception[NEIGHBORHOOD_LEFT] == COMMAND_CENTER:
+            self.orientation = MOVE_LEFT
         else:
-            self.orientation = MOVE_DOWN if dy > 0 else MOVE_UP
+            #Si el centro de mando no esta cerca nos orientamos al JUGADOR
+            enemy_x = perception[PLAYER_X]
+            enemy_y = perception[PLAYER_Y]
+            agent_x = perception[AGENT_X]
+            agent_y = perception[AGENT_Y]
+
+            dx = enemy_x - agent_x
+            dy = enemy_y - agent_y
+
+            if abs(dx) > abs(dy):
+                self.orientation = MOVE_RIGHT if dx > 0 else MOVE_LEFT
+            else:
+                self.orientation = MOVE_DOWN if dy > 0 else MOVE_UP
 
         self.state = "DISPARAR"
         return self.orientation, False
@@ -104,19 +115,19 @@ class SmartAgent(BaseAgent):
         if direction == MOVE_UP:
             return (perception[NEIGHBORHOOD_LEFT] == BRICK or perception[NEIGHBORHOOD_LEFT] == UNBREAKABLE) and \
                 (perception[NEIGHBORHOOD_RIGHT] == BRICK or perception[NEIGHBORHOOD_RIGHT] == UNBREAKABLE) and \
-                (perception[NEIGHBORHOOD_DOWN] == BRICK or perception[NEIGHBORHOOD_DOWN] == UNBREAKABLE)
+                (perception[NEIGHBORHOOD_UP] == BRICK or perception[NEIGHBORHOOD_DOWN] == UNBREAKABLE)
         elif direction == MOVE_DOWN:
             return (perception[NEIGHBORHOOD_LEFT] == BRICK or perception[NEIGHBORHOOD_LEFT] == UNBREAKABLE) and \
                 (perception[NEIGHBORHOOD_RIGHT] == BRICK or perception[NEIGHBORHOOD_RIGHT] == UNBREAKABLE) and \
-                (perception[NEIGHBORHOOD_UP] == BRICK or perception[NEIGHBORHOOD_UP] == UNBREAKABLE)
+                (perception[NEIGHBORHOOD_DOWN] == BRICK or perception[NEIGHBORHOOD_UP] == UNBREAKABLE)
         elif direction == MOVE_RIGHT:
             return (perception[NEIGHBORHOOD_UP] == BRICK or perception[NEIGHBORHOOD_UP] == UNBREAKABLE) and \
                 (perception[NEIGHBORHOOD_DOWN] == BRICK or perception[NEIGHBORHOOD_DOWN] == UNBREAKABLE) and \
-                (perception[NEIGHBORHOOD_LEFT] == BRICK or perception[NEIGHBORHOOD_LEFT] == UNBREAKABLE)
+                (perception[NEIGHBORHOOD_RIGHT] == BRICK or perception[NEIGHBORHOOD_LEFT] == UNBREAKABLE)
         elif direction == MOVE_LEFT:
             return (perception[NEIGHBORHOOD_UP] == BRICK or perception[NEIGHBORHOOD_UP] == UNBREAKABLE) and \
                 (perception[NEIGHBORHOOD_DOWN] == BRICK or perception[NEIGHBORHOOD_DOWN] == UNBREAKABLE) and \
-                (perception[NEIGHBORHOOD_RIGHT] == BRICK or perception[NEIGHBORHOOD_RIGHT] == UNBREAKABLE)
+                (perception[NEIGHBORHOOD_LEFT] == BRICK or perception[NEIGHBORHOOD_RIGHT] == UNBREAKABLE)
 
 
     #Esta funcion consiste en la disuasion de amenazas de la siguiente manera
