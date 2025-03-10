@@ -43,16 +43,16 @@ class SmartAgent(BaseAgent):
     
 
         #Cambiar a estado DISPARAR si hay centro de mando a distancia 4 o menos y esta orientado
-        if perception[CAN_FIRE] <= 4 and (
+        if perception[CAN_FIRE] <= 5 and (
             self.orientation == MOVE_UP and perception[NEIGHBORHOOD_UP] == COMMAND_CENTER) or \
-            (self.orientation == MOVE_DOWN and perception[NEIGHBORHOOD_DOWN] == BRICK) or \
-            (self.orientation == MOVE_RIGHT and perception[NEIGHBORHOOD_RIGHT] == BRICK) or \
-            (self.orientation == MOVE_LEFT and perception[NEIGHBORHOOD_LEFT] == BRICK):
+            (self.orientation == MOVE_DOWN and perception[NEIGHBORHOOD_DOWN] == COMMAND_CENTER) or \
+            (self.orientation == MOVE_RIGHT and perception[NEIGHBORHOOD_RIGHT] == COMMAND_CENTER) or \
+            (self.orientation == MOVE_LEFT and perception[NEIGHBORHOOD_LEFT] == COMMAND_CENTER):
                 self.state = "DISPARAR"
                 return STAY, False
 
-        #Cambiar a estado DISPARAR si hay enemigo a distancia 4 y esta orientado
-        if perception[CAN_FIRE] <= 4 and (
+        #Cambiar a estado DISPARAR si hay enemigo a distancia 6 y esta orientado
+        if perception[CAN_FIRE] <= 6 and (
                 self.orientation == MOVE_UP and perception[NEIGHBORHOOD_UP] == PLAYER) or \
                 (self.orientation == MOVE_DOWN and perception[NEIGHBORHOOD_DOWN] == PLAYER) or \
                 (self.orientation == MOVE_RIGHT and perception[NEIGHBORHOOD_RIGHT] == PLAYER) or \
@@ -60,8 +60,8 @@ class SmartAgent(BaseAgent):
             self.state = "DISPARAR"
             return STAY, False
 
-        #Cambiar a estado ORIENTAR si hay enemigo a distancia 2 pero no orientado
-        if perception[CAN_FIRE] <= 2 and (
+        #Cambiar a estado ORIENTAR si hay enemigo a distancia 4 pero no orientado
+        if perception[CAN_FIRE] <= 4 and (
             perception[NEIGHBORHOOD_UP] == PLAYER or
             perception[NEIGHBORHOOD_DOWN] == PLAYER or
             perception[NEIGHBORHOOD_RIGHT] == PLAYER or
@@ -70,7 +70,7 @@ class SmartAgent(BaseAgent):
             return STAY, False
 
         #Cambiar a estado ESQUIVAR si hay proyectil cercano
-        if self.check_projectile(perception):
+        if self.check_missile(perception):
             self.state = "ESQUIVAR"
             return STAY, False
 
@@ -114,19 +114,20 @@ class SmartAgent(BaseAgent):
         self.state = "EXPLORAR"
         return STAY, False
 
-    def check_projectile(self, perception):
-        #Detectar proyectil a distancia 2 si no está orientado
-        if self.orientation != MOVE_UP and perception[NEIGHBORHOOD_UP] == SHELL:
-            return True
-        if self.orientation != MOVE_DOWN and perception[NEIGHBORHOOD_DOWN] == SHELL:
-            return True
-        if self.orientation != MOVE_RIGHT and perception[NEIGHBORHOOD_RIGHT] == SHELL:
-            return True
-        if self.orientation != MOVE_LEFT and perception[NEIGHBORHOOD_LEFT] == SHELL:
-            return True
+    def check_missile(self, perception):
+        #Detectar proyectil a distancia 8 si no está orientado
+        if perception[CAN_FIRE] <= 8:
+            if self.orientation != MOVE_UP and perception[NEIGHBORHOOD_UP] == SHELL:
+                return True
+            if self.orientation != MOVE_DOWN and perception[NEIGHBORHOOD_DOWN] == SHELL:
+                return True
+            if self.orientation != MOVE_RIGHT and perception[NEIGHBORHOOD_RIGHT] == SHELL:
+                return True
+            if self.orientation != MOVE_LEFT and perception[NEIGHBORHOOD_LEFT] == SHELL:
+                return True
 
-        #Detectar proyectil a distancia 4 si está orientado
-        if perception[CAN_FIRE] == 4:
+        #Detectar proyectil a distancia 10 si está orientado
+        if perception[CAN_FIRE] <= 10:
             if self.orientation == MOVE_UP and perception[NEIGHBORHOOD_UP] == SHELL:
                 return True
             if self.orientation == MOVE_DOWN and perception[NEIGHBORHOOD_DOWN] == SHELL:
