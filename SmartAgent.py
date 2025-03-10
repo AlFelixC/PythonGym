@@ -84,7 +84,7 @@ class SmartAgent(BaseAgent):
         return STAY, True
 
     def state_orientar(self, perception):
-        #Verificar si el centro de mando está cerca
+        #Verificar si el centro de mando esta cerca
         if perception[NEIGHBORHOOD_UP] == COMMAND_CENTER:
             self.orientation = MOVE_UP
         elif perception[NEIGHBORHOOD_DOWN] == COMMAND_CENTER:
