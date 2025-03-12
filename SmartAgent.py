@@ -200,19 +200,21 @@ class SmartAgent(BaseAgent):
         dx = self.command_center_x - agent_x
         dy = self.command_center_y - agent_y
 
-        if abs(dx) + abs(dy) <= 20:  #Si el centro de mando esta a una distancia razonable
-            if abs(dx) > abs(dy):
-                self.orientation = MOVE_RIGHT if dx > 0 else MOVE_LEFT
-            else:
-                self.orientation = MOVE_DOWN if dy > 0 else MOVE_UP
+        # Siempre intentar moverse hacia el centro de mando
+        if abs(dx) > abs(dy):  # Priorizar movimiento horizontal si la diferencia es mayor
+            self.orientation = MOVE_RIGHT if dx > 0 else MOVE_LEFT
+        else:  # Priorizar movimiento vertical si la diferencia es mayor o igual
+            self.orientation = MOVE_DOWN if dy > 0 else MOVE_UP
 
-            #Verificar si hay obstaculos directos
-            if (self.orientation == MOVE_UP and perception[NEIGHBORHOOD_UP] != BRICK and perception[NEIGHBORHOOD_UP] != UNBREAKABLE) or \
-            (self.orientation == MOVE_DOWN and perception[NEIGHBORHOOD_DOWN] != BRICK and perception[NEIGHBORHOOD_DOWN] != UNBREAKABLE) or \
-            (self.orientation == MOVE_RIGHT and perception[NEIGHBORHOOD_RIGHT] != BRICK and perception[NEIGHBORHOOD_RIGHT] != UNBREAKABLE) or \
-            (self.orientation == MOVE_LEFT and perception[NEIGHBORHOOD_LEFT] != BRICK and perception[NEIGHBORHOOD_LEFT] != UNBREAKABLE):
-                return self.orientation, False
-        return None
+        # Verificar si hay obstáculos directos y avanzar si es posible
+        if (self.orientation == MOVE_UP and perception[NEIGHBORHOOD_UP] != BRICK and perception[NEIGHBORHOOD_UP] != UNBREAKABLE) or \
+        (self.orientation == MOVE_DOWN and perception[NEIGHBORHOOD_DOWN] != BRICK and perception[NEIGHBORHOOD_DOWN] != UNBREAKABLE) or \
+        (self.orientation == MOVE_RIGHT and perception[NEIGHBORHOOD_RIGHT] != BRICK and perception[NEIGHBORHOOD_RIGHT] != UNBREAKABLE) or \
+        (self.orientation == MOVE_LEFT and perception[NEIGHBORHOOD_LEFT] != BRICK and perception[NEIGHBORHOOD_LEFT] != UNBREAKABLE):
+            return self.orientation, False
+        
+        # Si no puede avanzar directamente hacia el centro de mando, quedarse quieto para evaluar la situación
+        return STAY, False
 
 
     def check_missile(self, perception):
