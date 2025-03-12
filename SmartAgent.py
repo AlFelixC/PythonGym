@@ -34,14 +34,14 @@ class SmartAgent(BaseAgent):
         #Este bloque de codigo es para disparar a los bloques destructibles (ponemos que dependiendo de un valor aleatorio
         #dispare a estos bloques para que no se quede disparando siempre a estos), si los tiene delante de ellos y el valor
         #aleatorio lo permite
-        if perception[CAN_FIRE] == 1:
-            if shoot == 1: 
-                if (self.orientation == MOVE_UP and perception[NEIGHBORHOOD_UP] == BRICK) or \
+        if (self.orientation == MOVE_UP and perception[NEIGHBORHOOD_UP] == BRICK) or \
                     (self.orientation == MOVE_DOWN and perception[NEIGHBORHOOD_DOWN] == BRICK) or \
                     (self.orientation == MOVE_RIGHT and perception[NEIGHBORHOOD_RIGHT] == BRICK) or \
                     (self.orientation == MOVE_LEFT and perception[NEIGHBORHOOD_LEFT] == BRICK):
-                        self.state = "DISPARAR"
-                        return STAY, False
+                    if perception[CAN_FIRE] == 1:
+                        if shoot == 1:
+                                self.state = "DISPARAR"
+                                return STAY, False
 
         #Cambiar a estado DISPARAR si hay enemigo a distancia 14 y esta orientado
         if perception[CAN_FIRE] <= 14 and (
