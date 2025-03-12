@@ -1,7 +1,7 @@
 import random
 from BaseAgent import BaseAgent
 from PerceptionConstants import *
-from AttackModule import AttackModule
+from ModAttack import AttackModule
 #SmartAgent.py es un NPC que estamos creando apartir de BaseAgente.py, clase de la cual hereda sus funciones
 #y nosotros sobrecargamos estas funciones para que realice sus actividades de manera totalmente autonoma
 class SmartAgent(BaseAgent):
