@@ -200,7 +200,7 @@ class SmartAgent(BaseAgent):
         dx = self.command_center_x - agent_x
         dy = self.command_center_y - agent_y
 
-        if abs(dx) + abs(dy) <= 12:  #Si el centro de mando esta a una distancia razonable
+        if abs(dx) + abs(dy) <= 20:  #Si el centro de mando esta a una distancia razonable
             if abs(dx) > abs(dy):
                 self.orientation = MOVE_RIGHT if dx > 0 else MOVE_LEFT
             else:
