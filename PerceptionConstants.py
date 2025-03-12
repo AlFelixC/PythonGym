@@ -1,4 +1,4 @@
-# Índices de percepción en el vector
+# Indices de percepcion en el vector
 NEIGHBORHOOD_UP = 0
 NEIGHBORHOOD_DOWN = 1
 NEIGHBORHOOD_RIGHT = 2
@@ -31,3 +31,13 @@ MOVE_UP = 1
 MOVE_DOWN = 2
 MOVE_RIGHT = 3
 MOVE_LEFT = 4
+
+# Movimiento del NPC
+movingDirs = [MOVE_UP, MOVE_DOWN, MOVE_RIGHT, MOVE_LEFT]
+dirs = [NEIGHBORHOOD_UP, NEIGHBORHOOD_DOWN, NEIGHBORHOOD_RIGHT, NEIGHBORHOOD_LEFT ]
+
+# Acciones del NPC
+EXPLORE = 0
+DEFEND = 1
+ATTACK = 2
+

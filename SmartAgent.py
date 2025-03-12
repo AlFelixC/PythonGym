@@ -1,29 +1,27 @@
 import random
 from BaseAgent import BaseAgent
 from PerceptionConstants import *
+from AttackModule import AttackModule
 #SmartAgent.py es un NPC que estamos creando apartir de BaseAgente.py, clase de la cual hereda sus funciones
 #y nosotros sobrecargamos estas funciones para que realice sus actividades de manera totalmente autonoma
 class SmartAgent(BaseAgent):
+  
     def __init__(self, id, name):
         super().__init__(id, name)
-        self.state = "EXPLORAR"
-        self.orientation = MOVE_UP  #Orientación inicial (mira hacia arriba)
-        self.command_center_x = COMMAND_CENTER_X
-        self.command_center_y = COMMAND_CENTER_Y
+        self.state = EXPLORE
+        self.map = [[-1 for _ in range(13)] for _ in range(13)]
 
     def Update(self, perception):
         print(f"SmartAgent 47 en estado: {self.state}")
         print(perception)
 
-        if self.state == "EXPLORAR":
+        if self.state == EXPLORE:
             return self.state_explorar(perception)
-        elif self.state == "DISPARAR":
+        elif self.state == ATTACK:
             return self.state_disparar(perception)
-        elif self.state == "ORIENTAR":
-            return self.state_orientar(perception)
-        elif self.state == "ESQUIVAR":
+        elif self.state == DEFEND:
             return self.state_esquivar(perception)
-
+####################################################################
     #Esta funcion es la que se encarga del estado de exploramiento del NPC y de la que dependen otras acciones
     def state_explorar(self, perception):
         #Cambiar a estado DISPARAR si hay bloque destruible a distancia 1 y esta orientado
