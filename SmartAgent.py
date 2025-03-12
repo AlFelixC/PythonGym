@@ -200,20 +200,19 @@ class SmartAgent(BaseAgent):
         dx = self.command_center_x - agent_x
         dy = self.command_center_y - agent_y
 
-        if abs(dx) + abs(dy) <= 26:  #Si el centro de mando esta a una distancia razonable
+        # Generar una decisión aleatoria para avanzar hacia el centro de mando
+        random_decision = random.randint(0, 1)  # 0 no avanza, 1 avanza
+
+        if abs(dx) + abs(dy) <= 26:  # Si el centro de mando está a una distancia razonable
             if abs(dx) > abs(dy):
                 self.orientation = MOVE_RIGHT if dx > 0 else MOVE_LEFT
             else:
                 self.orientation = MOVE_DOWN if dy > 0 else MOVE_UP
 
-            #Verificar si hay obstaculos directos
-            if (self.orientation == MOVE_UP and perception[NEIGHBORHOOD_UP] != BRICK and perception[NEIGHBORHOOD_UP] != UNBREAKABLE) or \
-            (self.orientation == MOVE_DOWN and perception[NEIGHBORHOOD_DOWN] != BRICK and perception[NEIGHBORHOOD_DOWN] != UNBREAKABLE) or \
-            (self.orientation == MOVE_RIGHT and perception[NEIGHBORHOOD_RIGHT] != BRICK and perception[NEIGHBORHOOD_RIGHT] != UNBREAKABLE) or \
-            (self.orientation == MOVE_LEFT and perception[NEIGHBORHOOD_LEFT] != BRICK and perception[NEIGHBORHOOD_LEFT] != UNBREAKABLE):
+            # Avanzar hacia el centro de mando si la decisión aleatoria lo permite
+            if random_decision == 1:
                 return self.orientation, False
         return None
-
 
     def check_missile(self, perception):
         #Detectar proyectil a distancia 8 si no esta orientado
