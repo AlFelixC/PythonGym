@@ -10,18 +10,8 @@ def casillaLibre(direction, perception):
         return NOTHING
     else:
         return UNBREAKABLE
-
-
-    # index = dirs[direction]
-    #
-    #   if perception[dirs[index]]>1 or perception[direction]==NOTHING:
-    #      return NOTHING
-    # elif perception[dirs[index]==1 and perception[direction]==BRICK]:
-    #    return BRICK
-    #else:
-    #  return UNBREAKABLE    
     
-
+    
 def ExploreModule(self, perception):
     
     random.shuffle(dirs)
