@@ -65,7 +65,7 @@ def ExploreModule(self, perception):
 
     if dirCommCenter != -1:
         print("MOVING TOWARDS COMMAND CENTER")
-        return to_the_center, False
+        return dirCommCenter, False
 
     #Romper bloque si esta al lado
     if distX > 0 and izq == BRICK:
