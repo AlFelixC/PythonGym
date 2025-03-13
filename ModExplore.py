@@ -78,13 +78,13 @@ def ExploreModule(self, perception):
 
     #Romper bloque si esta al lado
     if distX > 0 and izq == BRICK:
-        to_the_center = MOVE_LEFT
+        dirCommCenter = MOVE_LEFT
     elif distX < 0 and der == BRICK:
-        to_the_center = MOVE_RIGHT
+        dirCommCenter = MOVE_RIGHT
     elif distY > 0 and down == BRICK:
-        to_the_center = MOVE_DOWN
+        dirCommCenter = MOVE_DOWN
     elif distY < 0 and up == BRICK:
-        to_the_center = MOVE_UP
+        dirCommCenter = MOVE_UP
 
     if dirCommCenter != -1:
         return dirCommCenter, True
