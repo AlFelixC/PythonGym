@@ -4,12 +4,22 @@ import random
 def casillaLibre(direction, perception):
     index = dirs[direction]
 
-    if perception[dirs[index]]>1 or perception[direction]==NOTHING:
-        return NOTHING
-    elif perception[dirs[index]==1 and perception[direction]==BRICK]:
+    if perception[index] == BRICK:
         return BRICK
+    elif perception[index] == NOTHING:
+        return NOTHING
     else:
-        return UNBREAKABLE    
+        return UNBREAKABLE
+
+
+    # index = dirs[direction]
+    #
+    #   if perception[dirs[index]]>1 or perception[direction]==NOTHING:
+    #      return NOTHING
+    # elif perception[dirs[index]==1 and perception[direction]==BRICK]:
+    #    return BRICK
+    #else:
+    #  return UNBREAKABLE    
     
 
 def ExploreModule(self, perception):
@@ -39,7 +49,7 @@ def ExploreModule(self, perception):
             return movingDirs[i], True
         #Si impactamos con un BRICK le dispararemos
         #Prioridad de nivel 4
-        elif perception[direction] == BRICK:
+        elif casillaLibre(direction, perception) == BRICK:
             print("BRICK DETECTED, SHOOTING")
             self.status = ATTACK
             return movingDirs[i], True
