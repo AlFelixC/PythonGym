@@ -17,31 +17,30 @@ def ExploreModule(self, perception):
     random.shuffle(dirs)
 
     dirCommCenter = -1
-    
-    #Vemos si detecta un misil y que lo dispare para sobrevivir
-    #Prioridad de nivel 1
+        
     for i, direction in enumerate(dirs):
-
-        if perception[direction] == SHELL:    
+        #Vemos si detecta un misil y que lo dispare para sobrevivir
+        #Prioridad de nivel 1
+        if perception[direction] == SHELL:
             self.status = DEFEND
             print("MISSILE INCOMING, counterMeasures ready")
             return movingDirs[i], True
-        
-    #Vemos si tiene a tiro el centro de mando
-    #Prioridad de nivel 2
-    for i, direction in enumerate(dirs):
-
-        if perception[direction] == COMMAND_CENTER:
+        #Vemos si tiene a tiro el centro de mando
+        #Prioridad de nivel 2
+        elif perception[direction] == COMMAND_CENTER:
             self.status = ATTACK
             print("COMMAND CENTER DETECTED!!")
             return movingDirs[i], True
-
-    #Vemos si hay un jugador y le disparamos para seguir con la mision
-    #Prioridad de nivel 3
-    for i, direction in enumerate(dirs):
-
-        if perception[direction] == PLAYER:
+        #Vemos si hay un jugador y le disparamos para seguir con la mision
+        #Prioridad de nivel 3
+        elif perception[direction] == PLAYER:
             print("SCUM DETECTED, OPEN FIRE")
+            self.status = ATTACK
+            return movingDirs[i], True
+        #Si impactamos con un BRICK le dispararemos
+        #Prioridad de nivel 4
+        elif perception[direction] == BRICK:
+            print("BRICK DETECTED, SHOOTING")
             self.status = ATTACK
             return movingDirs[i], True
 
