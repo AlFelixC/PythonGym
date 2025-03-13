@@ -54,18 +54,27 @@ def ExploreModule(self, perception):
     up = casillaLibre(NEIGHBORHOOD_UP, perception)
     down = casillaLibre(NEIGHBORHOOD_DOWN, perception)
 
-    if distY > 0 and down == NOTHING: 
-        dirCommCenter = MOVE_DOWN
-    elif distY < 0 and up == NOTHING:
-        dirCommCenter = MOVE_UP
-    elif distX > 0 and izq == NOTHING:  
-       dirCommCenter = MOVE_LEFT
-    elif distX < 0 and der == NOTHING:
-       dirCommCenter = MOVE_RIGHT
+    if random.random() < 0.5:
+        if distY > 0 and down == NOTHING: 
+            dirCommCenter = MOVE_DOWN
+        elif distY < 0 and up == NOTHING:
+            dirCommCenter = MOVE_UP
+        elif distX > 0 and izq == NOTHING:  
+            dirCommCenter = MOVE_LEFT
+        elif distX < 0 and der == NOTHING:
+            dirCommCenter = MOVE_RIGHT
 
-    if dirCommCenter != -1:
-        print("MOVING TOWARDS COMMAND CENTER")
-        return dirCommCenter, False
+        if dirCommCenter != -1:
+            print("MOVING TOWARDS COMMAND CENTER")
+            return dirCommCenter, False
+    else: #Explorar alrededor
+        for direction in dirs:
+            if perception[direction] == NOTHING:
+                return movingDirs[dirs.index(direction)], False
+            
+        # Si no hay casillas libres, moverse aleatoriamente
+        paso = random.choice(movingDirs)
+        return paso, False
 
     #Romper bloque si esta al lado
     if distX > 0 and izq == BRICK:
