@@ -1,4 +1,4 @@
-# Indices de percepcion en el vector
+#Listado de indices
 NEIGHBORHOOD_UP = 0
 NEIGHBORHOOD_DOWN = 1
 NEIGHBORHOOD_RIGHT = 2
@@ -16,7 +16,7 @@ AGENT_Y = 13
 CAN_FIRE = 14
 HEALTH = 15
 
-# Objetos en el entorno
+#Items en el mapa
 NOTHING = 0
 UNBREAKABLE = 1
 BRICK = 2
@@ -25,18 +25,20 @@ PLAYER = 4
 SHELL = 5
 OTHER = 6
 
-# Acciones posibles
+#Movimientos posibles
 STAY = 0
 MOVE_UP = 1
 MOVE_DOWN = 2
 MOVE_RIGHT = 3
 MOVE_LEFT = 4
 
-# Movimiento del NPC
+#Movimiento del NPC
+#Creamos los siguientes arrays de informacion para evitar la repeticion de codigo con tantos ifs
 movingDirs = [MOVE_UP, MOVE_DOWN, MOVE_RIGHT, MOVE_LEFT]
-dirs = [NEIGHBORHOOD_UP, NEIGHBORHOOD_DOWN, NEIGHBORHOOD_RIGHT, NEIGHBORHOOD_LEFT ]
+dirs = [NEIGHBORHOOD_UP, NEIGHBORHOOD_DOWN, NEIGHBORHOOD_RIGHT, NEIGHBORHOOD_LEFT]
+dist = [NEIGHBORHOOD_DIST_UP, NEIGHBORHOOD_DIST_DOWN, NEIGHBORHOOD_DIST_RIGHT, NEIGHBORHOOD_DIST_LEFT]
 
-# Acciones del NPC
+#Estados del NPC
 EXPLORE = 0
 DEFEND = 1
 ATTACK = 2
