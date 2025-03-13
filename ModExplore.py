@@ -49,7 +49,7 @@ def ExploreModule(self, perception):
             return movingDirs[i], True
         #Si impactamos con un BRICK le dispararemos
         #Prioridad de nivel 4
-        elif casillaLibre(direction, perception) == BRICK:
+        elif direction in dirs and perception[direction] == BRICK:
             print("BRICK DETECTED, SHOOTING")
             self.status = ATTACK
             return movingDirs[i], True
