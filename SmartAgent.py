@@ -2,6 +2,8 @@ import random
 from BaseAgent import BaseAgent
 from PerceptionConstants import *
 from ModAttack import AttackModule
+from ModDefend import DefendModule
+from ModExplore import ExploreModule
 #SmartAgent.py es un NPC que estamos creando apartir de BaseAgente.py, clase de la cual hereda sus funciones
 #y nosotros sobrecargamos estas funciones para que realice sus actividades de manera totalmente autonoma
 class SmartAgent(BaseAgent):
@@ -16,10 +18,10 @@ class SmartAgent(BaseAgent):
         print(perception)
 
         if self.state == EXPLORE:
-            return self.state_explorar(perception)
+            return ExploreModule(self, perception)
         elif self.state == ATTACK:
-            return self.state_disparar(perception)
+            return AttackModule(self, perception)
         elif self.state == DEFEND:
-            return self.state_esquivar(perception)
+            return DefendModule(self, perception)
 
 
