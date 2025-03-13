@@ -98,12 +98,6 @@ def ExploreModule(self, perception):
     if dirCommCenter != -1:
         return dirCommCenter, True
 
-    for i, direction in enumerate(dirs):
-        if perception[direction] == BRICK:
- 
-            self.status = ATTACK
-            return movingDirs[i], 1
-
     #Busca otras opciones si el camino esta bloqueado
     for direction in dirs:
         if perception[direction] == UNBREAKABLE:
