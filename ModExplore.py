@@ -22,26 +22,26 @@ def ExploreModule(self, perception):
         #Vemos si detecta un misil y que lo dispare para sobrevivir
         #Prioridad de nivel 1
         if perception[direction] == SHELL:
-            self.status = DEFEND
+            self.state = DEFEND
             print("MISSILE INCOMING, counterMeasures ready")
             return movingDirs[i], False #Antes tenia puesto que True, pero el true debe ser en el ataque
         #Vemos si tiene a tiro el centro de mando
         #Prioridad de nivel 2
         elif perception[direction] == COMMAND_CENTER:
-            self.status = ATTACK
+            self.state = ATTACK
             print("COMMAND CENTER DETECTED!!")
             return movingDirs[i], False
         #Vemos si hay un jugador y le disparamos para seguir con la mision
         #Prioridad de nivel 3
         elif perception[direction] == PLAYER:
             print("SCUM DETECTED, OPEN FIRE")
-            self.status = ATTACK
+            self.state = ATTACK
             return movingDirs[i], False
         #Si impactamos con un BRICK le dispararemos
         #Prioridad de nivel 4
         elif perception[direction] == BRICK and perception[CAN_FIRE] == 1:
             print("BRICK DETECTED, SHOOTING")
-            self.status = ATTACK
+            self.state = ATTACK
             return movingDirs[i], False
 
     #Nos movemos hacia el centro de mando del cual conocemos todo el rato su posicion

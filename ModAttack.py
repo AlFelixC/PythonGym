@@ -34,4 +34,4 @@ def AttackModule(self, perception):
     
     #Si no hay objetivos vuelve a explorar
     self.state = EXPLORE
-    return STAY, True
+    return STAY, False
