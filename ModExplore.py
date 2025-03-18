@@ -53,7 +53,7 @@ def ExploreModule(self, perception):
     up = casillaLibre(NEIGHBORHOOD_UP, perception)
     down = casillaLibre(NEIGHBORHOOD_DOWN, perception)
 
-    if random.random() < 0.5:
+    if random.random() < 0.6:
         if distY > 0 and down == NOTHING: 
             dirCommCenter = MOVE_DOWN
         elif distY < 0 and up == NOTHING:
@@ -71,7 +71,7 @@ def ExploreModule(self, perception):
             if perception[direction] == NOTHING:
                 return movingDirs[dirs.index(direction)], False
             
-        # Si no hay casillas libres, moverse aleatoriamente
+        #Si no hay casillas libres, moverse aleatoriamente
         paso = random.choice(movingDirs)
         return paso, False
 
@@ -86,7 +86,7 @@ def ExploreModule(self, perception):
         dirCommCenter = MOVE_UP
 
     if dirCommCenter != -1:
-        return dirCommCenter, True
+        return dirCommCenter, False
 
     #Busca otras opciones si el camino esta bloqueado
     for direction in dirs:
