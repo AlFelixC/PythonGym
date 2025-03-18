@@ -29,5 +29,5 @@ def DefendModule(self, perception):
         self.state = ATTACK
         return dirShell, True
 
-    self.state = DEFEND
+    self.state = EXPLORE
     return STAY, False
