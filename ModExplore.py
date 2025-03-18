@@ -24,25 +24,25 @@ def ExploreModule(self, perception):
         if perception[direction] == SHELL:
             self.status = DEFEND
             print("MISSILE INCOMING, counterMeasures ready")
-            return movingDirs[i], True
+            return movingDirs[i], False #Antes tenia puesto que True, pero el true debe ser en el ataque
         #Vemos si tiene a tiro el centro de mando
         #Prioridad de nivel 2
         elif perception[direction] == COMMAND_CENTER:
             self.status = ATTACK
             print("COMMAND CENTER DETECTED!!")
-            return movingDirs[i], True
+            return movingDirs[i], False
         #Vemos si hay un jugador y le disparamos para seguir con la mision
         #Prioridad de nivel 3
         elif perception[direction] == PLAYER:
             print("SCUM DETECTED, OPEN FIRE")
             self.status = ATTACK
-            return movingDirs[i], True
+            return movingDirs[i], False
         #Si impactamos con un BRICK le dispararemos
         #Prioridad de nivel 4
         elif perception[direction] == BRICK and perception[CAN_FIRE] == 1:
             print("BRICK DETECTED, SHOOTING")
             self.status = ATTACK
-            return movingDirs[i], True
+            return movingDirs[i], False
 
     #Nos movemos hacia el centro de mando del cual conocemos todo el rato su posicion
     distX = int(perception[AGENT_X] - perception[COMMAND_CENTER_X])
@@ -86,7 +86,7 @@ def ExploreModule(self, perception):
         dirCommCenter = MOVE_UP
 
     if dirCommCenter != -1:
-        return dirCommCenter, False
+        return dirCommCenter, True
 
     #Busca otras opciones si el camino esta bloqueado
     for direction in dirs:
