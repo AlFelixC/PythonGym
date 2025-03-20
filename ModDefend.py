@@ -3,29 +3,30 @@ from PerceptionConstants import *
 
 #Logica de defenderse siempre vamos disparar al misil
 def DefendModule(self, perception):
-    defense = 0
+    defense = False #0
     dirShell = -1
     emptyDirs = []
 
     #Obtenemos la direccion del misil y direcciones donde haya hueco
-    for i, moves in enumerate(dirs):
+    for actDir, moves in enumerate(dirs):
         if perception[moves] == SHELL:
-            dirShell = i
+            dirShell = actDir
             self.state = DEFEND
-            defense = 1
+            defense = True #1
             print("MISIL DETECTADO")
         elif perception[moves] == NOTHING:
-            emptyDirs.append(i)  #Guardamos esas posiciones con hueco
+            emptyDirs.append(actDir)  #Guardamos esas posiciones con hueco
 
+    print("Valor de dirShell: ", dirShell)
     #No nos moveremos hacia donde esta la bala
-    if defense == 1:
+    if defense == True: #1
         for orientacion in emptyDirs:
             if dirShell != orientacion:
-                return orientacion, False
+                return orientacion, True
 
     #Nos orientamos y abrimos fuego
     if dirShell != -1:
-        print("No hay escapatoria, girando hacia la bala y disparando")
+        print("SHOOTING TOWARDS THE SHELL")
         self.state = ATTACK
         return dirShell, True
 

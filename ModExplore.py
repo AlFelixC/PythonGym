@@ -10,11 +10,15 @@ def casillaLibre(direction, perception):
         return NOTHING
     else:
         return UNBREAKABLE
-    
+
+def brickDistanciaUno(direction, perception):
+    if perception[dist[direction]] == 1 and perception[direction] == BRICK:
+        return True
+    else:
+        return False
+
     
 def ExploreModule(self, perception):
-    
-    random.shuffle(dirs)
 
     dirCommCenter = -1
         
@@ -39,7 +43,7 @@ def ExploreModule(self, perception):
             return movingDirs[i], False
         #Si impactamos con un BRICK le dispararemos
         #Prioridad de nivel 4
-        elif perception[direction] == BRICK and perception[CAN_FIRE] == 1:
+        elif perception[direction] == BRICK and brickDistanciaUno(i, perception) == True:
             print("BRICK DETECTED, SHOOTING")
             self.state = ATTACK
             return movingDirs[i], False
@@ -53,27 +57,19 @@ def ExploreModule(self, perception):
     up = casillaLibre(NEIGHBORHOOD_UP, perception)
     down = casillaLibre(NEIGHBORHOOD_DOWN, perception)
 
-    if random.random() < 0.6:
-        if distY > 0 and down == NOTHING: 
-            dirCommCenter = MOVE_DOWN
-        elif distY < 0 and up == NOTHING:
-            dirCommCenter = MOVE_UP
-        elif distX > 0 and izq == NOTHING:  
-            dirCommCenter = MOVE_LEFT
-        elif distX < 0 and der == NOTHING:
-            dirCommCenter = MOVE_RIGHT
+    if distY > 0 and down == NOTHING: 
+        dirCommCenter = MOVE_DOWN
+    elif distY < 0 and up == NOTHING:
+        dirCommCenter = MOVE_UP
+    elif distX > 0 and izq == NOTHING:  
+        dirCommCenter = MOVE_LEFT
+    elif distX < 0 and der == NOTHING:
+        dirCommCenter = MOVE_RIGHT
 
-        if dirCommCenter != -1:
-            print("MOVING TOWARDS COMMAND CENTER")
-            return dirCommCenter, False
-    else: #Explorar alrededor
-        for direction in dirs:
-            if perception[direction] == NOTHING:
-                return movingDirs[dirs.index(direction)], False
-            
-        #Si no hay casillas libres, moverse aleatoriamente
-        paso = random.choice(movingDirs)
-        return paso, False
+    if dirCommCenter != -1:
+        print("MOVING TOWARDS COMMAND CENTER")
+        return dirCommCenter, False
+   
 
     #Romper bloque si esta al lado
     if distX > 0 and izq == BRICK:
@@ -85,8 +81,9 @@ def ExploreModule(self, perception):
     elif distY < 0 and up == BRICK:
         dirCommCenter = MOVE_UP
 
+    print("Avanzando rompiendo bloque")
     if dirCommCenter != -1:
-        return dirCommCenter, True
+      return dirCommCenter, True
 
     #Busca otras opciones si el camino esta bloqueado
     for direction in dirs:
