@@ -25,13 +25,13 @@ def ExploreModule(self, perception):
         
     for i, direction in enumerate(dirs):
         #Vemos si detecta un misil y que lo dispare para sobrevivir
-        #Prioridad de nivel 1
+        #Prioridad de nivel 1 (Ya que prioriza su propia existencia)
         if perception[direction] == SHELL:
             self.state = DEFEND
             print("MISSILE INCOMING, counterMeasures ready")
             return movingDirs[i], False #Antes tenia puesto que True, pero el true debe ser en el ataque
         #Vemos si tiene a tiro el centro de mando
-        #Prioridad de nivel 2
+        #Prioridad de nivel 2 (Es su obetivo principal)
         elif perception[direction] == COMMAND_CENTER:
             self.state = ATTACK
             print("COMMAND CENTER DETECTED!!")
@@ -71,8 +71,7 @@ def ExploreModule(self, perception):
         print("MOVING TOWARDS COMMAND CENTER")
         return dirCommCenter, False
    
-
-    #Romper bloque si esta al lado
+    #Romper bloque si esta al lado y nos impide el paso
     if posXCC > 0 and izq == BRICK:
         dirCommCenter = MOVE_LEFT
     elif posXCC < 0 and der == BRICK:
@@ -84,9 +83,7 @@ def ExploreModule(self, perception):
 
     #Tiene un bloque entre medias y le dispara para poder atravesarlo
     if dirCommCenter != -1:
-      self.state = ATTACK
-      print("BRICK entre medias, SHOOTING")
-      return dirCommCenter, False
+      return dirCommCenter, True
 
     #Busca otras opciones si el camino esta bloqueado
     for direction in dirs:
