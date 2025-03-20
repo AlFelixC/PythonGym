@@ -11,6 +11,7 @@ def casillaLibre(direction, perception):
     else:
         return UNBREAKABLE
 
+#Esta funcion lo que hace es que dispare a un BRICK solo si esta distancia 1
 def brickDistanciaUno(direction, perception):
     if perception[dist[direction]] == 1 and perception[direction] == BRICK:
         return True
@@ -49,21 +50,21 @@ def ExploreModule(self, perception):
             return movingDirs[i], False
 
     #Nos movemos hacia el centro de mando del cual conocemos todo el rato su posicion
-    distX = int(perception[AGENT_X] - perception[COMMAND_CENTER_X])
-    distY = int(perception[AGENT_Y] - perception[COMMAND_CENTER_Y])
+    posXCC = int(perception[AGENT_X] - perception[COMMAND_CENTER_X])
+    posYCC = int(perception[AGENT_Y] - perception[COMMAND_CENTER_Y])
 
     izq = casillaLibre(NEIGHBORHOOD_LEFT, perception)
     der = casillaLibre(NEIGHBORHOOD_RIGHT, perception)
     up = casillaLibre(NEIGHBORHOOD_UP, perception)
     down = casillaLibre(NEIGHBORHOOD_DOWN, perception)
 
-    if distY > 0 and down == NOTHING: 
+    if posYCC > 0 and down == NOTHING: 
         dirCommCenter = MOVE_DOWN
-    elif distY < 0 and up == NOTHING:
+    elif posYCC < 0 and up == NOTHING:
         dirCommCenter = MOVE_UP
-    elif distX > 0 and izq == NOTHING:  
+    elif posXCC > 0 and izq == NOTHING:  
         dirCommCenter = MOVE_LEFT
-    elif distX < 0 and der == NOTHING:
+    elif posXCC < 0 and der == NOTHING:
         dirCommCenter = MOVE_RIGHT
 
     if dirCommCenter != -1:
@@ -72,18 +73,20 @@ def ExploreModule(self, perception):
    
 
     #Romper bloque si esta al lado
-    if distX > 0 and izq == BRICK:
+    if posXCC > 0 and izq == BRICK:
         dirCommCenter = MOVE_LEFT
-    elif distX < 0 and der == BRICK:
+    elif posXCC < 0 and der == BRICK:
         dirCommCenter = MOVE_RIGHT
-    elif distY > 0 and down == BRICK:
+    elif posYCC > 0 and down == BRICK:
         dirCommCenter = MOVE_DOWN
-    elif distY < 0 and up == BRICK:
+    elif posYCC < 0 and up == BRICK:
         dirCommCenter = MOVE_UP
 
-    print("Avanzando rompiendo bloque")
+    #Tiene un bloque entre medias y le dispara para poder atravesarlo
     if dirCommCenter != -1:
-      return dirCommCenter, True
+      self.state = ATTACK
+      print("BRICK entre medias, SHOOTING")
+      return dirCommCenter, False
 
     #Busca otras opciones si el camino esta bloqueado
     for direction in dirs:
