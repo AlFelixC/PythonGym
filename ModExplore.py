@@ -11,6 +11,7 @@ def casillaLibre(direction, perception):
     else:
         return UNBREAKABLE
 
+
 #Esta funcion lo que hace es que dispare a un BRICK solo si esta distancia 1
 def brickDistanciaUno(direction, perception):
     if perception[dist[direction]] == 1 and perception[direction] == BRICK:
@@ -19,9 +20,13 @@ def brickDistanciaUno(direction, perception):
         return False
 
     
-def ExploreModule(self, perception):
 
+
+def ExploreModule(self, perception):
+    #Ningun elemento en nuestro PerceptionConstant es igual a -1
+    #De tal manera le asignaremos este
     dirCommCenter = -1
+    shoot = False
         
     for i, direction in enumerate(dirs):
         #Vemos si detecta un misil y que lo dispare para sobrevivir
@@ -29,29 +34,29 @@ def ExploreModule(self, perception):
         if perception[direction] == SHELL:
             self.state = DEFEND
             print("MISSILE INCOMING, counterMeasures ready")
-            return movingDirs[i], False #Antes tenia puesto que True, pero el true debe ser en el ataque
+            return movingDirs[i], shoot #Antes tenia puesto que True, pero el true debe ser en el ataque
         #Vemos si tiene a tiro el centro de mando
         #Prioridad de nivel 2 (Es su obetivo principal)
         elif perception[direction] == COMMAND_CENTER:
             self.state = ATTACK
             print("COMMAND CENTER DETECTED!!")
-            return movingDirs[i], False
+            return movingDirs[i], shoot
         #Vemos si hay un jugador y le disparamos para seguir con la mision
         #Prioridad de nivel 3
         elif perception[direction] == PLAYER:
             print("SCUM DETECTED, OPEN FIRE")
             self.state = ATTACK
-            return movingDirs[i], False
+            return movingDirs[i], shoot
         #Si impactamos con un BRICK le dispararemos
         #Prioridad de nivel 4
-        elif perception[direction] == BRICK and brickDistanciaUno(i, perception) == True:
+        elif perception[direction] == BRICK and brickDistanciaUno(direction, perception) == True:
             print("BRICK DETECTED, SHOOTING")
             self.state = ATTACK
-            return movingDirs[i], False
+            return movingDirs[i], shoot
 
     #Nos movemos hacia el centro de mando del cual conocemos todo el rato su posicion
-    posXCC = int(perception[AGENT_X] - perception[COMMAND_CENTER_X])
-    posYCC = int(perception[AGENT_Y] - perception[COMMAND_CENTER_Y])
+    posXCC = (perception[AGENT_X] - perception[COMMAND_CENTER_X])
+    posYCC = (perception[AGENT_Y] - perception[COMMAND_CENTER_Y])
 
     izq = casillaLibre(NEIGHBORHOOD_LEFT, perception)
     der = casillaLibre(NEIGHBORHOOD_RIGHT, perception)
@@ -69,7 +74,7 @@ def ExploreModule(self, perception):
 
     if dirCommCenter != -1:
         print("MOVING TOWARDS COMMAND CENTER")
-        return dirCommCenter, False
+        return dirCommCenter, shoot
    
     #Romper bloque si esta al lado y nos impide el paso
     if posXCC > 0 and izq == BRICK:
@@ -83,7 +88,8 @@ def ExploreModule(self, perception):
 
     #Tiene un bloque entre medias y le dispara para poder atravesarlo
     if dirCommCenter != -1:
-      return dirCommCenter, True
+      shoot = True
+      return dirCommCenter, shoot
 
     #Busca otras opciones si el camino esta bloqueado
     for direction in dirs:
@@ -91,10 +97,10 @@ def ExploreModule(self, perception):
 
             for alternate_direction in dirs:
                 if perception[alternate_direction] == NOTHING:
-                    return movingDirs[alternate_direction], False
+                    return movingDirs[alternate_direction], shoot
 
             #Como ultima opcion nos movemos aletoriamente
             paso = random.choice(movingDirs)
-            return paso, False
+            return paso, shoot
 
-    return STAY, False
+    return STAY, shoot

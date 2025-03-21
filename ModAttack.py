@@ -5,9 +5,7 @@ def AttackModule(self, perception):
     #para que elija el que nosotros queremos en orden
     priority = {
         SHELL: 0, #Mantenerse vivo es su prioridad antes que seguir con el objetivo
-        COMMAND_CENTER: 1,
-        PLAYER: 2,
-        BRICK: 3,
+        COMMAND_CENTER: 1, PLAYER: 2, BRICK: 3
     }
     print("ENTERING ATTACK MODE >:(")
 
