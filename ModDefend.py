@@ -4,6 +4,7 @@ from PerceptionConstants import *
 #Logica para la defensa. Dispararemos a los misiles
 def DefendModule(self, perception):
     defense = False
+    shoot = False
     dirShell = -1
     dirsHuida = []
 
@@ -17,25 +18,26 @@ def DefendModule(self, perception):
             dirsHuida.append(actDir)  #Guardamos esas posiciones con hueco para poder huir
 
     #Que esquive el misil si tiene tiempo y espacio disponible
-    if defense == True and perception[dist[dirShell]] > 8:
+    if defense == True and perception[dist[dirShell]] > 9:
         for orientation in dirsHuida:
-            if dirShell != orientation:
+            if dirShell == orientation:
                 print("DODGING THE SHELL")
                 self.state = EXPLORE
-                return orientation, False
+                return orientation, shoot
 
-    #No nos moveremos hacia donde esta la bala
-    if defense == True: #1
+    #Disparamos hacia el misil
+    if defense == True:
         for orientacion in dirsHuida:
             if dirShell != orientacion:
-                self.state = ATTACK
-                return orientacion, False #Cambio a False estaba en true
+                print("SHOOTING TOWARDS THE SHELL")
+                shoot = True
+                return orientacion, shoot
 
     #Nos orientamos y abrimos fuego
     if dirShell != -1:
-        print("SHOOTING TOWARDS THE SHELL")
-        self.state = ATTACK
-        return dirShell, False #Cambio a False estaba en true
+        print("TURNING TO SHOOT")
+        shoot = True
+        return dirShell, shoot
 
     self.state = EXPLORE
-    return STAY, False
+    return STAY, shoot

@@ -88,6 +88,7 @@ def ExploreModule(self, perception):
 
     #Tiene un bloque entre medias y le dispara para poder atravesarlo
     if dirCommCenter != -1:
+      print("SHOOTING OBSTACLE BRICK")
       shoot = True
       return dirCommCenter, shoot
 
